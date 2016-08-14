@@ -132,13 +132,16 @@ class Lightbox extends Component {
 		const { classes } = this.props.sheet;
 
 		return (
-			<button title="Previous (Left arrow key)"
+			<button title={this.props.prevHint || 'Previous (Left arrow key)'}
 				type="button"
-				className={`${classes.arrow} ${classes.arrowPrev}`}
+				className={`${classes.arrow} ${classes.arrowPrev} ${this.props.prevButtonClassName || ''}`}
 				onClick={this.gotoPrev}
 				onTouchEnd={this.gotoPrev}
 			>
-				<Icon type="arrowLeft" />
+        {
+          typeof this.props.prevButtonContent !== 'undefined'
+            ? this.props.prevButtonContent : <Icon type="arrowLeft" />
+        }
 			</button>
 		);
 	}
@@ -146,13 +149,16 @@ class Lightbox extends Component {
 		if (this.props.currentImage === (this.props.images.length - 1)) return null;
 		const { classes } = this.props.sheet;
 		return (
-			<button title="Next (Right arrow key)"
+			<button title={this.props.nextHint || 'Next (Right arrow key)'}
 				type="button"
-				className={`${classes.arrow} ${classes.arrowNext}`}
+				className={`${classes.arrow} ${classes.arrowNext} ${this.props.nextButtonClassName || ''}`}
 				onClick={this.gotoNext}
 				onTouchEnd={this.gotoNext}
-				>
-				<Icon type="arrowRight" />
+      >
+        {
+          typeof this.props.nextButtonContent !== 'undefined'
+            ? this.props.nextButtonContent : <Icon type="arrowRight" />
+        }
 			</button>
 		);
 	}
@@ -172,11 +178,14 @@ class Lightbox extends Component {
 
 		return (
 			<button
-				title="Close (Esc)"
-				className={classes.closeButton}
+				title={this.props.closeHint || 'Close (Esc)'}
+				className={`${classes.closeButton} ${this.props.closeButtonClassName || ''}`}
 				onClick={this.props.onClose}
 			>
-				<Icon type="close" />
+        {
+          typeof this.props.closeButtonContent !== 'undefined'
+            ? this.props.closeButtonContent : <Icon type="close" />
+        }
 			</button>
 		);
 	}
@@ -191,7 +200,7 @@ class Lightbox extends Component {
 		return (
 			<div id="react-images-container"
 				key="dialog"
-				className={classes.container}
+				className={`${classes.container} ${this.props.containerClassName || ''}`}
 				onClick={this.close}
 				onTouchEnd={this.close}
 			>
@@ -284,7 +293,11 @@ Lightbox.displayName = 'Lightbox';
 Lightbox.propTypes = {
 	backdropClosesModal: PropTypes.bool,
 	currentImage: PropTypes.number,
-	customControls: PropTypes.arrayOf(PropTypes.node),
+  customControls: PropTypes.arrayOf(PropTypes.node),
+  closeButton: PropTypes.element,
+  closeClassName: PropTypes.string,
+  closeHint: PropTypes.string,
+  containerClassName: PropTypes.string,
 	enableKeyboardInput: PropTypes.bool,
 	imageCountSeparator: PropTypes.string,
 	images: PropTypes.arrayOf(
@@ -294,7 +307,13 @@ Lightbox.propTypes = {
 			caption: PropTypes.string,
 		})
 	).isRequired,
-	isOpen: PropTypes.bool,
+  isOpen: PropTypes.bool,
+  prevButton: PropTypes.element,
+  prevClassName: PropTypes.string,
+  prevHint: PropTypes.string,
+  nextButton: PropTypes.element,
+  nextClassName: PropTypes.string,
+  nextHint: PropTypes.string,
 	onClickImage: PropTypes.func,
 	onClickNext: PropTypes.func,
 	onClickPrev: PropTypes.func,

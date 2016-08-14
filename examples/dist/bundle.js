@@ -494,12 +494,15 @@ var Lightbox = (function (_Component) {
 		value: function componentWillReceiveProps(nextProps) {
 			if (!_utils2['default'].canUseDom) return;
 
-			if (nextProps.isOpen && nextProps.enableKeyboardInput) {
+			if (nextProps.enableKeyboardInput) {
 				window.addEventListener('keydown', this.handleKeyboardInput);
+			} else {
+				window.removeEventListener('keydown', this.handleKeyboardInput);
+			}
+			if (nextProps.isOpen) {
 				window.addEventListener('resize', this.handleResize);
 				this.handleResize();
 			} else {
-				window.removeEventListener('keydown', this.handleKeyboardInput);
 				window.removeEventListener('resize', this.handleResize);
 			}
 
@@ -585,13 +588,13 @@ var Lightbox = (function (_Component) {
 
 			return _react2['default'].createElement(
 				'button',
-				{ title: 'Previous (Left arrow key)',
+				{ title: this.props.prevHint || 'Previous (Left arrow key)',
 					type: 'button',
-					className: classes.arrow + ' ' + classes.arrowPrev,
+					className: classes.arrow + ' ' + classes.arrowPrev + ' ' + (this.props.prevButtonClassName || ''),
 					onClick: this.gotoPrev,
 					onTouchEnd: this.gotoPrev
 				},
-				_react2['default'].createElement(_Icon2['default'], { type: 'arrowLeft' })
+				typeof this.props.prevButtonContent !== 'undefined' ? this.props.prevButtonContent : _react2['default'].createElement(_Icon2['default'], { type: 'arrowLeft' })
 			);
 		}
 	}, {
@@ -602,13 +605,13 @@ var Lightbox = (function (_Component) {
 
 			return _react2['default'].createElement(
 				'button',
-				{ title: 'Next (Right arrow key)',
+				{ title: this.props.nextHint || 'Next (Right arrow key)',
 					type: 'button',
-					className: classes.arrow + ' ' + classes.arrowNext,
+					className: classes.arrow + ' ' + classes.arrowNext + ' ' + (this.props.nextButtonClassName || ''),
 					onClick: this.gotoNext,
 					onTouchEnd: this.gotoNext
 				},
-				_react2['default'].createElement(_Icon2['default'], { type: 'arrowRight' })
+				typeof this.props.nextButtonContent !== 'undefined' ? this.props.nextButtonContent : _react2['default'].createElement(_Icon2['default'], { type: 'arrowRight' })
 			);
 		}
 	}, {
@@ -632,11 +635,11 @@ var Lightbox = (function (_Component) {
 			return _react2['default'].createElement(
 				'button',
 				{
-					title: 'Close (Esc)',
-					className: classes.closeButton,
+					title: this.props.closeHint || 'Close (Esc)',
+					className: classes.closeButton + ' ' + (this.props.closeButtonClassName || ''),
 					onClick: this.props.onClose
 				},
-				_react2['default'].createElement(_Icon2['default'], { type: 'close' })
+				typeof this.props.closeButtonContent !== 'undefined' ? this.props.closeButtonContent : _react2['default'].createElement(_Icon2['default'], { type: 'close' })
 			);
 		}
 	}, {
@@ -655,7 +658,7 @@ var Lightbox = (function (_Component) {
 				'div',
 				{ id: 'react-images-container',
 					key: 'dialog',
-					className: classes.container,
+					className: classes.container + ' ' + (this.props.containerClassName || ''),
 					onClick: this.close,
 					onTouchEnd: this.close
 				},
@@ -762,6 +765,10 @@ Lightbox.propTypes = {
 	backdropClosesModal: _react.PropTypes.bool,
 	currentImage: _react.PropTypes.number,
 	customControls: _react.PropTypes.arrayOf(_react.PropTypes.node),
+	closeButton: _react.PropTypes.element,
+	closeClassName: _react.PropTypes.string,
+	closeHint: _react.PropTypes.string,
+	containerClassName: _react.PropTypes.string,
 	enableKeyboardInput: _react.PropTypes.bool,
 	imageCountSeparator: _react.PropTypes.string,
 	images: _react.PropTypes.arrayOf(_react.PropTypes.shape({
@@ -770,6 +777,12 @@ Lightbox.propTypes = {
 		caption: _react.PropTypes.string
 	})).isRequired,
 	isOpen: _react.PropTypes.bool,
+	prevButton: _react.PropTypes.element,
+	prevClassName: _react.PropTypes.string,
+	prevHint: _react.PropTypes.string,
+	nextButton: _react.PropTypes.element,
+	nextClassName: _react.PropTypes.string,
+	nextHint: _react.PropTypes.string,
 	onClickImage: _react.PropTypes.func,
 	onClickNext: _react.PropTypes.func,
 	onClickPrev: _react.PropTypes.func,
